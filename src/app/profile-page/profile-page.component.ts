@@ -15,7 +15,6 @@ export class ProfilePageComponent {
 
   public getProfileDetails() {
     this.http.get<any>('https://mocki.io/v1/611a3036-4420-48a5-b8da-9b461853cdd2').subscribe(res => {
-      console.log(res);
       this.profileData = res;
       this.profileData.img = '/assets/images/profile-img.png';
       localStorage.removeItem('authToken');
