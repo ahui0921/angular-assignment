@@ -24,7 +24,10 @@ export class RegistrationFormComponent {
 
   public submit() {
     if (this.regForm.valid) {
-      this.http.get(' https://mocki.io/v1/7f434df6-a4ac-4817-ab7c-dd39a564d01d', this.regForm.value)
+      localStorage.setItem('authToken', 'true');
+      this.http.get(' https://mocki.io/v1/7f434df6-a4ac-4817-ab7c-dd39a564d01d', this.regForm.value).subscribe((data)=>{
+        console.log(data)
+      });
     }
   }
   @Output() submitAction = new EventEmitter();
