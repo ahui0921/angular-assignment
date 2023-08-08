@@ -11,11 +11,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import { ProfilePageComponent } from './profile-page/profile-page.component';
+import { AuthGuard } from './services/auth.guard'
 @NgModule({
   declarations: [
     AppComponent,
-    RegistrationFormComponent
+    RegistrationFormComponent,
+    ProfilePageComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +30,7 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
