@@ -3,7 +3,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RegistrationFormComponent } from './reg-form.component';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services/auth.service';
 import { of } from 'rxjs';
 
 describe('RegistrationFormComponent', () => {
