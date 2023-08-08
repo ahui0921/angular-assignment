@@ -1,0 +1,47 @@
+.card-container {
+    display: flex;
+    justify-content: center;
+    margin: 100px 0px;
+}
+
+.card {
+    width: 500px;
+    align-items: center;
+    border-radius: 30px;
+    background: #ededed;
+}
+
+mat-form-field {
+    width: 400px;
+}
+
+mat-card-title {
+    margin: 20px 0;
+    color: black;
+}
+
+mat-card-content {
+    display: flex;
+    justify-content: center;
+    width: 80%;
+}
+
+.mat-card {
+    width: 500px;
+}
+
+.submitBtn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+button{
+    border-radius: 12px;
+    background: lightgray;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin-bottom: 15px;
+    border: gray;
+}
