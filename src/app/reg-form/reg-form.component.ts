@@ -1,8 +1,10 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from "@angular/router";
 import { AuthService } from "../services/auth.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {IResponse} from "../models/response.model";
+
 @Component({
   selector: 'reg-form',
   templateUrl: './reg-form.component.html',
@@ -12,22 +14,28 @@ export class RegistrationFormComponent {
   public regForm: FormGroup;
 
   constructor(
-    private http: HttpClient,
     private router: Router,
+    private authService: AuthService,
+    private _snackBar: MatSnackBar
   ) {
     this.regForm = new FormGroup({
-      name: new FormControl(''),
-      email: new FormControl(''),
-      password: new FormControl(''),
-      bio: new FormControl(''),
+      name: new FormControl('', [Validators.required, Validators.nullValidator, Validators.maxLength(100)]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.nullValidator, Validators.maxLength(100)]),
+      bio: new FormControl('', [Validators.required, Validators.nullValidator, Validators.maxLength(100)]),
     });
   }
 
   public submit() {
     if (this.regForm.valid) {
       localStorage.setItem('authToken', 'true');
-      this.http.get(' https://mocki.io/v1/7f434df6-a4ac-4817-ab7c-dd39a564d01d', this.regForm.value).subscribe((data) => {
-      this.router.navigate(['profile-page']);
+      this.authService.registerNewUser().subscribe((result: IResponse) => {
+        if (result.success) {
+          this.router.navigate(['profile-page']);
+          this._snackBar.open('Registration success');
+        } else {
+          this._snackBar.open('Failed registration');
+        }
       });
     }
   }

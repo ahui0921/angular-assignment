@@ -5,27 +5,31 @@
             <form [formGroup]="regForm" (submit)="submit()">
                 <p>
                     <mat-form-field>
-                        <input type="text" matInput placeholder="Name" formControlName="name">
+                      <mat-label>Name</mat-label>
+                      <input type="text" matInput formControlName="name">
                     </mat-form-field>
                 </p>
                 <p>
                     <mat-form-field>
-                        <input type="email" matInput placeholder="Ex. xxx@example.com" formControlName="email">
+                      <mat-label>Email</mat-label>
+                      <input type="email" matInput placeholder="Ex. xxx@example.com" formControlName="email">
                     </mat-form-field>
                 </p>
                 <p>
                     <mat-form-field>
-                        <input type="password" matInput placeholder="Password" formControlName="password">
+                      <mat-label>Password</mat-label>
+                      <input type="password" matInput formControlName="password">
                     </mat-form-field>
                 </p>
                 <p>
                     <mat-form-field>
-                        <input type="text" matInput placeholder="Bio" formControlName="bio">
+                      <mat-label>Bio</mat-label>
+                      <textarea maxlength="50" type="text" matInput placeholder="Jot something here..." formControlName="bio"></textarea>
                     </mat-form-field>
                 </p>
 
                 <div class="submitBtn">
-                    <button type="submit" mat-button>Confirm</button>
+                    <button [disabled]="!regForm.valid" type="submit" mat-button>Confirm</button>
                 </div>
             </form>
         </mat-card-content>

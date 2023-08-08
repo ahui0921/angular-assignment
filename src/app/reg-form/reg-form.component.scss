@@ -1,18 +1,19 @@
 .card-container {
     display: flex;
     justify-content: center;
-    margin: 100px 0px;
+    margin: 100px 0;
 }
 
 .card {
-    width: 500px;
+    width: 50%;
     align-items: center;
     border-radius: 30px;
     background: #ededed;
 }
-
-mat-form-field {
-    width: 400px;
+@media only screen and (max-width: 600px) {
+  .card {
+    width: 80%;
+  }
 }
 
 mat-card-title {
@@ -27,7 +28,7 @@ mat-card-content {
 }
 
 .mat-card {
-    width: 500px;
+    width: 30%;
 }
 
 .submitBtn {
@@ -36,12 +37,23 @@ mat-card-content {
 }
 
 button{
+    width: 100%;
     border-radius: 12px;
-    background: lightgray;
-    padding: 15px 32px;
+    background: cadetblue;
+    color: black;
     text-align: center;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 1rem;
     margin-bottom: 15px;
     border: gray;
+}
+
+button:disabled,
+button[disabled]{
+  background-color: darkgrey;
+  color: gray;
+}
+
+textarea {
+    max-height: 200px;
 }
