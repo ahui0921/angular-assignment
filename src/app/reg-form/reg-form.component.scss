@@ -8,7 +8,7 @@
     width: 50%;
     align-items: center;
     border-radius: 30px;
-    background: #ededed;
+    background: lightgray;
 }
 @media only screen and (max-width: 600px) {
   .card {
@@ -36,7 +36,7 @@ mat-card-content {
     justify-content: flex-end;
 }
 
-button{
+button {
     width: 100%;
     border-radius: 12px;
     background: cadetblue;

@@ -14,7 +14,7 @@ export class RegistrationFormComponent {
   public regForm: FormGroup;
 
   constructor(
-    private router: Router,
+    public router: Router,
     private authService: AuthService,
     private _snackBar: MatSnackBar
   ) {
@@ -31,13 +31,13 @@ export class RegistrationFormComponent {
       localStorage.setItem('authToken', 'true');
       this.authService.registerNewUser().subscribe((result: IResponse) => {
         if (result.success) {
-          this.router.navigate(['profile-page']);
-          this._snackBar.open('Registration success');
+          this.router.navigate(['profile-page']).then(() => {
+            this._snackBar.open('Registration success', undefined, {duration: 3000});
+          });
         } else {
-          this._snackBar.open('Failed registration');
+          this._snackBar.open('Failed registration', undefined, {duration: 3000});
         }
       });
     }
   }
-  @Output() submitAction = new EventEmitter();
 }

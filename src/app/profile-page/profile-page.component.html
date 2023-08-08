@@ -1,10 +1,11 @@
 <div class="profile-container">
-    <div class="profile-card-container">
-        <img class="profile-image" src="{{profileData.img}}" alt="Profile icon">
-        <div class="content">
-            <h4 [innerHTML]="profileData.name"></h4>
-            <p [innerHTML]="profileData.email"></p>
-            <p [innerHTML]="profileData.bio"></p>
-        </div>
-    </div>
+  <h1>Profile page</h1>
+  <div class="profile-card-container" *ngIf="profileData">
+      <img class="profile-image" src="{{profileData.img}}" alt="Profile image">
+      <div class="content">
+          <h4 [innerHTML]="profileData.name"></h4>
+          <p [innerHTML]="profileData.email"></p>
+          <p [innerHTML]="profileData.bio"></p>
+      </div>
+  </div>
 </div>

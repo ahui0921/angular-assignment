@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {AuthService} from "../services/auth.service";
+import {IProfile} from "../models/response.model";
 
 @Component({
   selector: 'app-profile-page',
@@ -7,17 +9,19 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./profile-page.component.scss']
 })
 export class ProfilePageComponent {
-  profileData: any;
+  profileData!: IProfile;
   constructor(
-    private http: HttpClient) {
-    this.profileData = this.getProfileDetails();
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {
+    this.getProfileDetails();
   }
 
-  public getProfileDetails() {
-    this.http.get<any>('https://mocki.io/v1/611a3036-4420-48a5-b8da-9b461853cdd2').subscribe(res => {
-      this.profileData = res;
+  public getProfileDetails(): void {
+    this.authService.getProfileData().subscribe((response: IProfile) => {
+      this.profileData = response;
       this.profileData.img = '/assets/images/profile-img.png';
       localStorage.removeItem('authToken');
-    });
+    })
   }
 }

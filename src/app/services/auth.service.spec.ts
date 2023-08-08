@@ -2,11 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
-import { IResponse } from '../models/response.model';
+import { IResponse, IProfile } from '../models/response.model';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let httpMock: HttpTestingController;
+  let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -15,44 +15,51 @@ describe('AuthService', () => {
     });
 
     authService = TestBed.inject(AuthService);
-    httpMock = TestBed.inject(HttpTestingController);
+    httpTestingController = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    httpMock.verify();
+    httpTestingController.verify();
   });
 
-  it('should be created', () => {
-    expect(authService).toBeTruthy();
-  });
-
-  it('return "true" if authToken exists', () => {
-    localStorage.setItem('authToken', 'true');
-
+  it('should return true if user is authenticated', () => {
+    localStorage.setItem('authToken', 'dummyToken');
     const isAuthenticated = authService.isAuthenticated();
-
     expect(isAuthenticated).toBe(true);
   });
 
-  it('return "false" if authToken does not exist', () => {
+  it('should return false if user is not authenticated', () => {
     localStorage.removeItem('authToken');
-
     const isAuthenticated = authService.isAuthenticated();
-
     expect(isAuthenticated).toBe(false);
   });
 
-  it('make an HTTP GET request to register a new user', () => {
+  it('should send a GET request for registration', () => {
     const mockResponse: IResponse = { success: true };
 
-    authService.registerNewUser().subscribe((res: IResponse) => {
-      expect(res).toEqual(mockResponse);
+    authService.registerNewUser().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne(environment.apiUrl);
+    const req = httpTestingController.expectOne(`${environment.baseUrl}${authService.REGISTRATION_URL_TAIL}`);
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
-});
-export { AuthService };
 
+  it('should send a GET request for profile data', () => {
+    const mockProfile: IProfile = {
+      img: '',
+      name: '',
+      email: '',
+      bio: ''
+    };
+
+    authService.getProfileData().subscribe((profile) => {
+      expect(profile).toEqual(mockProfile);
+    });
+
+    const req = httpTestingController.expectOne(`${environment.baseUrl}${authService.PROFILE_URL_TAIL}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockProfile);
+  });
+});

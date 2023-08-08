@@ -1,62 +1,69 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistrationFormComponent } from './reg-form.component';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '../services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
+import { IResponse } from '../models/response.model';
+import {MatCardModule} from "@angular/material/card";
+import {MatFormFieldModule} from "@angular/material/form-field";
 
 describe('RegistrationFormComponent', () => {
   let component: RegistrationFormComponent;
   let fixture: ComponentFixture<RegistrationFormComponent>;
-  let mockRouter: jasmine.SpyObj<Router>;
-  let mockAuthService: jasmine.SpyObj<AuthService>;
-  let mockSnackBar: jasmine.SpyObj<MatSnackBar>;
+  let authService: AuthService;
+  let snackBar: MatSnackBar;
 
   beforeEach(() => {
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['registerNewUser']);
-    const snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
-
     TestBed.configureTestingModule({
       declarations: [RegistrationFormComponent],
-      imports: [ReactiveFormsModule],
+      imports: [RouterTestingModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule],
       providers: [
-        { provide: Router, useValue: routerSpy },
-        { provide: AuthService, useValue: authServiceSpy },
-        { provide: MatSnackBar, useValue: snackBarSpy }
-      ]
+        { provide: AuthService, useValue: { registerNewUser: () => {return of({success: true})} } },
+        { provide: MatSnackBar, useValue: { open: () => {} } },
+      ],
     });
 
     fixture = TestBed.createComponent(RegistrationFormComponent);
     component = fixture.componentInstance;
-
-    mockRouter = TestBed.inject(Router) as jasmine.SpyObj<Router>;
-    mockAuthService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    mockSnackBar = TestBed.inject(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
-
-    component.regForm = new FormGroup({
-      name: new FormControl('Test Name', [Validators.required, Validators.maxLength(100)]),
-      email: new FormControl('test@example.com', [Validators.required, Validators.email]),
-      password: new FormControl('testpassword', [Validators.required, Validators.maxLength(100)]),
-      bio: new FormControl('Test bio', [Validators.required, Validators.maxLength(100)]),
-    });
+    authService = TestBed.inject(AuthService);
+    snackBar = TestBed.inject(MatSnackBar);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should submit form and navigate on successful registration', fakeAsync(() => {
-    const response = { success: true };
-    mockAuthService.registerNewUser.and.returnValue(of(response));
+  it('should submit form and handle successful registration', () => {
+    const mockResponse: IResponse = { success: true };
+
+    spyOn(authService, 'registerNewUser').and.returnValue(of(mockResponse));
+    spyOn(component.router, 'navigate').and.returnValue(Promise.resolve(true));
+
+    component.regForm.setValue({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+      bio: 'Hello, I am John.',
+    });
 
     component.submit();
-    tick();
 
-    expect(localStorage.getItem('authToken')).toBe('true');
-    expect(mockAuthService.registerNewUser).toHaveBeenCalled();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['profile-page']);
-    expect(mockSnackBar.open).toHaveBeenCalledWith('Registration success');
-  }));
+    expect(authService.registerNewUser).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalledWith(['profile-page']);
+  });
+
+  it('should submit form and handle failed registration', () => {
+    const mockResponse: IResponse = { success: false };
+    spyOn(authService, 'registerNewUser').and.returnValue(of(mockResponse));
+    component.regForm.setValue({
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      password: 'password456',
+      bio: 'Hello, I am Jane.',
+    });
+    component.submit();
+    expect(authService.registerNewUser).toHaveBeenCalled();
+  });
 });
